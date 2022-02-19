@@ -114,6 +114,8 @@ export default class WinTable{
                 case '0':
                     e = ' '
                     break
+                default:
+                    break
             }
             return e === '10' ? '*' : e
         }))
