@@ -37,7 +37,7 @@ const WinTableReduced = (props) => {
         )
     return (
         <div>
-            <p style={{margin: '5px', fontSize:'5px'}}>Win rate of all hands</p>
+            <p style={{margin: '5px', fontSize:'16px'}}>Win rate of all hands</p>
             <HeatMapGrid
                 data={data}
                 xLabels={xLabels}

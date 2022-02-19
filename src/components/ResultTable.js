@@ -11,13 +11,13 @@ import Paper from '@mui/material/Paper';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: 'rgba(48,132,241,0.39)',
-        fontSize: 3,
+        // fontSize: 3,
         padding: 1,
         color: 'rgb(42,42,42)',
 
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 5,
+        // fontSize: 5,
         padding: 1,
 
     },
@@ -44,9 +44,7 @@ export default function ResultTable(props) {
         <TableContainer component={Paper}>
             <Table aria-label="a dense table">
                 <TableHead>
-                    <TableRow
-                        sx={{ fontSize: 5 }}
-                    >
+                    <TableRow>
                         <StyledTableCell align="center">Pl. Num</StyledTableCell>
                         <StyledTableCell align="center">Hand</StyledTableCell>
                         <StyledTableCell align="center">Win rate</StyledTableCell>
