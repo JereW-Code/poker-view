@@ -8,7 +8,6 @@ const TYPE = ['S', 'D', 'H', 'C']
 
 
 const WinTableReduced = (props) => {
-    console.log(props)
     let xLabels = new Array(13).fill(0).map((_, i) => NUM[i])
     let yLabels = new Array(13).fill(0).map((_, i) => NUM[i] + 's' + 'ANY')
     if(props.flush.length === 1 || props.flush[0] === props.flush[1]){
@@ -27,7 +26,7 @@ const WinTableReduced = (props) => {
     try{
         winTable = props.table.reduced(props.flush).table
     } catch (e){
-        console.log(props)
+        console.log('failed to refreash win table')
     }
     data = winTable === undefined ? data : new Array(yLabels.length)
         .fill(0)
@@ -40,33 +39,37 @@ const WinTableReduced = (props) => {
                 })
         )
     return (
-        <HeatMapGrid
-            data={data}
-            xLabels={xLabels}
-            yLabels={yLabels}
-            // Reder cell with tooltip
-            cellRender={(x, y, value) => (
-                <div title={`Pos(${x}, ${y}) = ${value}`}>{value}</div>
-            )}
-            xLabelsStyle={(index) => ({
-                color: '#777',
-                fontSize: '.5rem'
-            })}
-            yLabelsStyle={() => ({
-                fontSize: '.7rem',
-                color: '#777'
-            })}
-            cellStyle={(_x, _y, ratio) => ({
-                background: `rgb(10, 100, 255, ${ratio})`,
-                fontSize: '.6rem',
-                color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`
-            })}
-            cellHeight='1rem'
-            xLabelsPos='bottom'
-            onClick={(x, y) => alert(`Clicked (${x}, ${y})`)}
-            yLabelsPos='right'
-            square
-        />
+        <div>
+            <p style={{margin: '5px', fontSize:'5px'}}>Win rate of all hands</p>
+            <HeatMapGrid
+                data={data}
+                xLabels={xLabels}
+                yLabels={yLabels}
+                // Reder cell with tooltip
+                cellRender={(x, y, value) => (
+                    <div title={`Pos(${x}, ${y}) = ${value}`}>{value}</div>
+                )}
+                xLabelsStyle={(index) => ({
+                    color: '#777',
+                    fontSize: '.5rem'
+                })}
+                yLabelsStyle={() => ({
+                    fontSize: '.7rem',
+                    color: '#777'
+                })}
+                cellStyle={(_x, _y, ratio) => ({
+                    background: `rgb(10, 100, 255, ${ratio})`,
+                    fontSize: '.4rem',
+                    color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`
+                })}
+                cellHeight='1rem'
+                xLabelsPos='bottom'
+                onClick={(x, y) => alert(`Clicked (${x}, ${y})`)}
+                yLabelsPos='right'
+                square
+            />
+        </div>
+
     )
 }
 

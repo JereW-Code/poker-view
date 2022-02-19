@@ -15,8 +15,7 @@ let data = new Array(yLabels.length)
     )
 
 const WinTable = (props) => {
-    console.log(props)
-
+    console.log('win table refreashed')
     data = props.table === undefined ? data : new Array(yLabels.length)
         .fill(0)
         .map((_, row) =>

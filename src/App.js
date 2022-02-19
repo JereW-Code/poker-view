@@ -6,6 +6,7 @@ function App() {
 
     return (
         <div className="App" id='app'>
+            <h3>Poker Win Rate Calculator</h3>
             <CardSelectionLite />
             {/*<CardSelection/>*/}
         </div>

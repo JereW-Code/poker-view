@@ -8,6 +8,7 @@ import Game from '../game/Game';
 import WinTableReduced from './WinTableReduced';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
+import ResultTable from'./ResultTable';
 
 
 export default function CardSelectionLite() {
@@ -16,6 +17,9 @@ export default function CardSelectionLite() {
     const [winRate, setWinRate] = React.useState(0)
     const [winTable, setWinTable] = React.useState({})
     const [flush, setFlush] = React.useState('ANY')
+    const [playerNum, setPlayerNum] = React.useState(6)
+    const [hand, setHand] = React.useState(['/', '/'])
+    const [cardsRevealed, setCardsRevealed] = React.useState([])
 
     const TYPE = ['S', 'D', 'H', 'C']
     const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
@@ -25,12 +29,9 @@ export default function CardSelectionLite() {
         let typeOccurence = [0, 0, 0, 0]
         cards.forEach(c => typeOccurence[TYPE.indexOf(c[0])] += 1)
         let result = typeOccurence.filter(t => t >= 2)
-        console.log(result)
         if(result.length === 1){
             result.push(result[0])
         }
-        console.log('^')
-        console.log(result)
         if(result.length === 2){
             if(result[0] === 2 && result[1] === 2){
                 return TYPE.filter((_,i) => typeOccurence[i] === 2)
@@ -46,29 +47,43 @@ export default function CardSelectionLite() {
     const handleSubmit = () => {
 
         let code = document.getElementById('code').value.toUpperCase().split(' ')
+        if(code.length < 3){
+            code = [6, '/', '/']
+        }
         let playerNum = code.shift()
+
         let yourCard = [code.shift(), code.shift()]
+
         let yourCardIndex = yourCard.map(c => 13 * TYPE.indexOf(c[0]) + CARD_RANK[NUM.indexOf(c[1])] - 2)
         let cards = code
-        setFlush(getMostOccurance(cards))
 
-        setWinTable(Game.getWinRate(playerNum, cards))
-        let winRate
+        let winTable = Game.getWinRate(playerNum, cards)
+
+        let wRate
         try {
-            winRate = winTable.table[yourCardIndex[0]][yourCardIndex[1]]
+            winTable.reduced().print()
+            wRate = winTable.table[yourCardIndex[0]][yourCardIndex[1]]
         } catch (e) {
-            winRate = [0, 1]
+            wRate = [0, 1]
         }
-        setWinRate((100 * winRate[0] / (winRate[0] + winRate[1])).toFixed())
+        // put all 'set' functions at the end of a 'handle' function
+        setPlayerNum(playerNum)
+        setHand(yourCard)
+        setFlush(getMostOccurance(cards))
+        setCardsRevealed(cards)
+        setWinRate((100 * wRate[0] / (wRate[0] + wRate[1])).toFixed())
+        setWinTable(winTable)
 
+        console.log(cardsRevealed + '  ' + winRate)
 
     }
 
     return (
-        <Container style={{width: '300px', marginTop: '50px'}} >
+        <Container style={{width: '300px'}} >
             <WinTableReduced table={winTable} flush={flush} style={{margin: 'auto'}}/>
-            <h1>{winRate}</h1>
-            <FormControl>
+            <ResultTable code={code} playerNum={playerNum} hand={hand} winRate={winRate} cardsRevealed={cardsRevealed}
+               />
+            <FormControl  style={{marginTop: '20px'}}>
                 <TextField label='Code' id='code' key='code' onChange={setCode}/>
 
                 <Button variant="contained" type='submit' onClick={handleSubmit}>Submit</Button>
