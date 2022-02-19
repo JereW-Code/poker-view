@@ -48,6 +48,8 @@ export default function CardSelectionLite() {
             code = [code.length === 0 ? 6 : code[0], '/', '/']
         }
         let playerNum = code.shift()
+        console.log(playerNum)
+        playerNum = playerNum > 1 ? playerNum : 6
 
         let yourCard = [code.shift(), code.shift()]
 
