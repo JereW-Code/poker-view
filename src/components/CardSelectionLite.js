@@ -1,12 +1,9 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
-import Box from '@mui/material/Box';
 import Game from '../game/Game';
 import WinTableReduced from './WinTableReduced';
-import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import ResultTable from'./ResultTable';
 

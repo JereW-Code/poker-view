@@ -1,6 +1,5 @@
 import './App.css';
 import React from 'react';
-import CardSelection from './components/CardSelection';
 import CardSelectionLite from './components/CardSelectionLite'
 function App() {
 
@@ -8,7 +7,6 @@ function App() {
         <div className="App" id='app'>
             <h3>Poker Win Rate Calculator</h3>
             <CardSelectionLite />
-            {/*<CardSelection/>*/}
         </div>
     );
 }

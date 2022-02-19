@@ -2,18 +2,15 @@ import React from 'react'
 import { HeatMapGrid } from 'react-grid-heatmap'
 
 const NUM = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
-const TYPE = ['S', 'D', 'H', 'C']
-
-
 
 
 const WinTableReduced = (props) => {
     let xLabels = new Array(13).fill(0).map((_, i) => NUM[i])
-    let yLabels = new Array(13).fill(0).map((_, i) => NUM[i] + 's' + 'ANY')
+    let yLabels = new Array(13).fill(0).map((_, i) => `${NUM[i]}sANY`)
     if(props.flush.length === 1 || props.flush[0] === props.flush[1]){
-        yLabels = new Array(13).fill(0).map((_, i) => NUM[i] + 's' + props.flush[0])
+        yLabels = new Array(13).fill(0).map((_, i) => `${NUM[i]}s${props.flush[0]}`)
     } else if(props.flush.length === 2) {
-        yLabels = new Array(13).fill(0).map((_, i) => NUM[i] + 's' + props.flush[0] + '/' + props.flush[1])
+        yLabels = new Array(13).fill(0).map((_, i) => `${NUM[i]}s${props.flush[0]}/${props.flush[1]}`)
     }
     let data = new Array(yLabels.length)
         .fill(0)

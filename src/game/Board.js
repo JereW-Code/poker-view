@@ -74,7 +74,8 @@ import Deck from './Deck'
         let potStr = 'pot: ' + this.pot + '\n'
         let blindStr = 'blind: ' + this.blind + '\n'
         let playersStr = this.players.map((player, index) => {
-            return '\n' + "player" + index + ": " + player
+            // return '\n' + "player" + index + ": " + player
+            return `\nplayer${index}: ${player}`
         })
         return cardStr + blindStr + potStr + playersStr
     }
