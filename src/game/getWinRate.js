@@ -2,7 +2,7 @@ import Player from "./Player"
 import GameManager from './GameManager'
 
 
-const getWinRate = function(playerNum, cards){
+export default function getWinRate(playerNum, cards){
         const ACCURACY = 1
 
         let players = Array.apply(null, Array(parseInt(playerNum !== '' ? playerNum : 6 + ''))).map((index) => { return new Player(index, 500) })
@@ -17,10 +17,6 @@ const getWinRate = function(playerNum, cards){
         // console.log('Cards revealed: ' + gm.displayedCards)
 
         return gm.winTable
-}
-
-export default {
-    getWinRate: getWinRate
 }
 
 

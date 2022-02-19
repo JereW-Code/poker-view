@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
-import Game from '../game/Game';
+import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
 import Container from '@mui/material/Container';
 import ResultTable from'./ResultTable';
@@ -45,7 +45,7 @@ export default function CardSelectionLite() {
 
         let code = document.getElementById('code').value.toUpperCase().split(' ')
         if(code.length < 3){
-            code = [6, '/', '/']
+            code = [code.length === 0 ? 6 : code[0], '/', '/']
         }
         let playerNum = code.shift()
 
@@ -54,7 +54,7 @@ export default function CardSelectionLite() {
         let yourCardIndex = yourCard.map(c => 13 * TYPE.indexOf(c[0]) + CARD_RANK[NUM.indexOf(c[1])] - 2)
         let cards = code
 
-        let winTable = Game.getWinRate(playerNum, cards)
+        let winTable = getWinRate(playerNum, cards)
 
         let wRate
         try {

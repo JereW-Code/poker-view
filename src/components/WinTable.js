@@ -14,7 +14,7 @@ let data = new Array(yLabels.length)
             .map(() => 99)
     )
 
-const WinTable = (props) => {
+export default function WinTable(props) {
     console.log('win table refreashed')
     data = props.table === undefined ? data : new Array(yLabels.length)
         .fill(0)
@@ -63,5 +63,3 @@ const WinTable = (props) => {
         </div>
     )
 }
-
-export default WinTable

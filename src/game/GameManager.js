@@ -131,7 +131,24 @@ export default class GameManager{
         }
         for(let i = 0; i < this.maxRaiseTime && numOfChecks !== this.numOfRemainingPlayers - 1 && this.numOfRemainingPlayers > 1; i++) {
 
-            this.players.forEach((player, index) => {
+            // this.players.forEach((player, index) => {
+            //     if(isBlind){
+            //         if(index >= 1) isBlind = false;
+            //         return;
+            //     }
+            //     if(!player.isOut) {
+            //         let winRate = this.winTable.getWinRateOfHand(player.hand)
+            //         let action = player.decide(this.board, winRate)
+            //         if (action.isFold) {
+            //             this.refreshWinRates()
+            //             this.numOfRemainingPlayers -= 1
+            //         } else if (action.isCheck) {
+            //             numOfChecks += 1
+            //         }
+            //     }
+            // })
+            for(let index = 0; index < this.players.length; index++){
+                let player = this.players[index]
                 if(isBlind){
                     if(index >= 1) isBlind = false;
                     return;
@@ -146,7 +163,7 @@ export default class GameManager{
                         numOfChecks += 1
                     }
                 }
-            })
+            }
             console.log('current pot: ' + this.board.pot + '\n-------------\n')
             console.log(this.players.map((a) => '<' + a.id + ': ' + a.cash + ' $> ').reduce((a, b) => a + b))
         }
