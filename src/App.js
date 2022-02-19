@@ -6,7 +6,7 @@ function App() {
 
     return (
         <div className="App" id='app'>
-            <h3>Poker Win Rate Calculator</h3>
+            <h3>Dri's Poker Win Rate Calculator</h3>
             <CardSelectionLite />
             <Help/>
         </div>
