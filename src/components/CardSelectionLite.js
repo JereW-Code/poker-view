@@ -11,10 +11,10 @@ import ResultTable from'./ResultTable';
 export default function CardSelectionLite() {
 
     const [code, setCode] = React.useState('')
-    const [winRate, setWinRate] = React.useState(0)
+    const [winRate, setWinRate] = React.useState('-')
     const [winTable, setWinTable] = React.useState({})
     const [flush, setFlush] = React.useState('ANY')
-    const [playerNum, setPlayerNum] = React.useState(6)
+    const [playerNum, setPlayerNum] = React.useState('-')
     const [hand, setHand] = React.useState(['/', '/'])
     const [cardsRevealed, setCardsRevealed] = React.useState([])
 
@@ -53,12 +53,16 @@ export default function CardSelectionLite() {
             }
         }
         console.log(code)
-        code = code.reduce((a, b) => a + b).split(' ')
-        console.log(code)
-        if(code.length < 3){
-            code = [code.length === 0 ? 6 : code[0], '/', '/']
+        if(code.length !== 0) {
+            code = code.reduce((a, b) => a + b).split(' ')
+            console.log(code)
+            if (code.length < 3) {
+                code = [code.length === 0 ? 6 : code[0], '/', '/']
+            }
+            return code
+        } else {
+            return [[6], '/', '/']
         }
-        return code
     }
 
     const handleSubmit = () => {
