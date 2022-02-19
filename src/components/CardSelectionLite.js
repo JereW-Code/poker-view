@@ -41,14 +41,30 @@ export default function CardSelectionLite() {
         }
     }
 
-    const handleSubmit = () => {
+    const getCode = (codeUnprocessed) => {
 
-        let code = document.getElementById('code').value.toUpperCase().split(' ')
+        codeUnprocessed += ' '
+        let code = []
+        for(let i = 0; i < codeUnprocessed.length - 1; i++){
+            let c = codeUnprocessed[i]
+            let cNext = codeUnprocessed[i+1]
+            if(!(c === ' ' && cNext === ' ')){
+                code.push(c)
+            }
+        }
+        console.log(code)
+        code = code.reduce((a, b) => a + b).split(' ')
+        console.log(code)
         if(code.length < 3){
             code = [code.length === 0 ? 6 : code[0], '/', '/']
         }
+        return code
+    }
+
+    const handleSubmit = () => {
+
+        let code = getCode(document.getElementById('code').value.toUpperCase())
         let playerNum = code.shift()
-        console.log(playerNum)
         playerNum = playerNum > 1 ? playerNum : 6
 
         let yourCard = [code.shift(), code.shift()]

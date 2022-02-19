@@ -5,6 +5,8 @@ const NUM = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 
 
 const WinTableReduced = (props) => {
+
+
     let xLabels = new Array(13).fill(0).map((_, i) => NUM[i])
     let yLabels = new Array(13).fill(0).map((_, i) => `${NUM[i]}sANY`)
     if(props.flush.length === 1 || props.flush[0] === props.flush[1]){
@@ -61,7 +63,7 @@ const WinTableReduced = (props) => {
                 })}
                 cellHeight='1rem'
                 xLabelsPos='bottom'
-                onClick={(x, y) => alert(`Clicked (${x}, ${y})`)}
+                onClick={(x, y) => alert(`${NUM[Math.min(x, y)]}, ${NUM[Math.max(x, y)]}`)}
                 yLabelsPos='right'
                 square
             />
