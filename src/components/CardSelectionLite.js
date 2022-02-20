@@ -2,8 +2,7 @@ import * as React from 'react';
 import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
 import ResultTable from'./ResultTable';
-import MicIcon from '@mui/icons-material/Mic';
-import { Container, IconButton, Button, TextField, FormControl, Box } from '@mui/material';
+import { Container, Button, TextField, FormControl } from '@mui/material';
 
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
 const speechsdk = require('microsoft-cognitiveservices-speech-sdk')
@@ -19,6 +18,7 @@ export default function CardSelectionLite() {
     const [hand, setHand] = React.useState(['/', '/'])
     const [cardsRevealed, setCardsRevealed] = React.useState([])
     const [voiceInput, setVoiceInput] = React.useState('')
+    const [codeInput, setCodeInput] = React.useState('')
 
     const TYPE = ['S', 'D', 'H', 'C']
     const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
@@ -47,6 +47,7 @@ export default function CardSelectionLite() {
                 }
                 let code = []
                 console.log(precode)
+                //模糊处理
                 for(let i = 0; i < precode.length; i++){
                     let c = precode[i]
                     switch (c){
@@ -76,12 +77,20 @@ export default function CardSelectionLite() {
                         case 'A':
                             code.push(c)
                             break
+                        case '斑':
+                            code.push('8')
+                            break
+
                         case '石':
                         case '时':
                         case '使':
                         case '矢':
                         case '1':
                             code.push('T')
+                            break
+                        case '借':
+                        case '结':
+                            code.push('J')
                             break
                         case '过':
                             code.push(' /')
@@ -97,6 +106,7 @@ export default function CardSelectionLite() {
                 document.getElementById('code').value = code
 
                 setVoiceInput(precode.reduce((a, b) => a + b))
+                setCodeInput(code)
                 setCode(code)
                 handleSubmit()
             } else {
@@ -207,11 +217,11 @@ export default function CardSelectionLite() {
                     style={{margin: '7px'}}
                 >Voice Input</Button>
                 <TextField
-                    label = 'code'
+                    placeholder='code'
                     id='code'
                     key='code'
-                    value={code}
-                    onChange={setCode}
+                    value={codeInput.value}
+                    onChange={setCodeInput}
                 />
 
 

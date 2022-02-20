@@ -31,6 +31,9 @@ export default function Help() {
                     <h3>How to read the table</h3>
                     <p>if you have two cards of the same kind as specified on the y-label of the plot, read your lower card from y-axis and higher card from x-axis</p>
                     <p>otherwise, read your lower card from x-axis and higher card from y-axis</p>
+
+                    <h3>Voice input</h3>
+                    <p>still working on...</p>
                 </div>
             </Backdrop>
         </div>
