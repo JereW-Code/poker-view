@@ -37,70 +37,74 @@ export default function CardSelectionLite() {
             let text;
             if (result.reason === ResultReason.RecognizedSpeech) {
                 text = `${result.text}`
+
+                let precode = []
+                for(let i = 0; i < text.length; i++){
+                    let c = text[i]
+                    if(c !== ' ' && c !== '。' && c !== '，'){
+                        precode.push(c.toUpperCase())
+                    }
+                }
+                let code = []
+                console.log(precode)
+                for(let i = 0; i < precode.length; i++){
+                    let c = precode[i]
+                    switch (c){
+                        case '梅':
+                            code.push(' C')
+                            break
+                        case '方':
+                            code.push(' D')
+                            break
+                        case '红':
+                            code.push(' H')
+                            break
+                        case '黑':
+                            code.push(' S')
+                            break
+                        case '2':
+                        case '3':
+                        case '4':
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                        case '9':
+                        case 'J':
+                        case 'Q':
+                        case 'K':
+                        case 'A':
+                            code.push(c)
+                            break
+                        case '石':
+                        case '时':
+                        case '使':
+                        case '矢':
+                        case '1':
+                            code.push('T')
+                            break
+                        case '过':
+                            code.push(' /')
+                            break
+                        default:
+                            console.log(c)
+                            break
+                    }
+                }
+                code = code.reduce((a, b) => a + b)
+                console.log(code)
+
+                document.getElementById('code').value = code
+
+                setVoiceInput(precode.reduce((a, b) => a + b))
+                setCode(code)
+                handleSubmit()
             } else {
-                text = 'ERROR: Speech was cancelled or could not be recognized. Ensure your microphone is working properly.';
+                text = 'INVAILD_VOICE_INPUT';
+                setVoiceInput(text)
+                handleSubmit()
             }
-            let precode = []
-            for(let i = 0; i < text.length; i++){
-                let c = text[i]
-                if(c !== ' ' && c !== '。' && c !== '，'){
-                    precode.push(c.toUpperCase())
-                }
-            }
-            let code = []
-            console.log(precode)
-            for(let i = 0; i < precode.length; i++){
-                let c = precode[i]
-                switch (c){
-                    case '梅':
-                        code.push(' C')
-                        break
-                    case '方':
-                        code.push(' D')
-                        break
-                    case '红':
-                        code.push(' H')
-                        break
-                    case '黑':
-                        code.push(' S')
-                        break
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                    case 'J':
-                    case 'Q':
-                    case 'K':
-                    case 'A':
-                        code.push(c)
-                        break
-                    case '石':
-                    case '时':
-                    case '使':
-                    case '矢':
-                    case '1':
-                        code.push('T')
-                        break
-                    case '过':
-                        code.push(' /')
-                        break
-                    default:
-                        console.log(c)
-                        break
-                }
-            }
-            code = code.reduce((a, b) => a + b)
-            console.log(code)
 
-            document.getElementById('code').value = code
-
-            setVoiceInput(precode)
-            setCode(code)
-            handleSubmit()
         });
     }
 
@@ -186,23 +190,38 @@ export default function CardSelectionLite() {
             <ResultTable code={code} playerNum={playerNum} hand={hand} winRate={winRate} cardsRevealed={cardsRevealed}
                />
             <FormControl  style={{marginTop: '20px'}}>
-                <Box sx={{ display: 'flex'}}>
-                    <TextField
-                               helperText = 'Code'
-                               id='code'
-                               key='code'
-                               onChange={setCode}
-                    />
-                    <IconButton
-                        aria-label="voice-input"
-                        onClick={getVoiceInput}
-                        edge="end"
-                    >
-                        <MicIcon/>
-                    </IconButton>
-                </Box>
-                <p>{voiceInput}</p>
-                <Button variant="contained" type='submit' onClick={handleSubmit}>Submit</Button>
+
+                <TextField
+                    id="outlined-multiline-flexible"
+                    disabled
+                    label="voice input"
+                    multiline
+                    maxRows={4}
+                    value={voiceInput}
+
+                />
+                <Button
+                    variant="outlined"
+                    aria-label="voice-input"
+                    onClick={getVoiceInput}
+                    style={{margin: '7px'}}
+                >Voice Input</Button>
+                <TextField
+                    label = 'code'
+                    id='code'
+                    key='code'
+                    value={code}
+                    onChange={setCode}
+                />
+
+
+
+                <Button
+                    variant="contained"
+                    type='submit'
+                    onClick={handleSubmit}
+                    style={{margin: '7px'}}
+                >Submit</Button>
             </FormControl>
         </Container>
     );
