@@ -2,7 +2,6 @@ import './App.css';
 import React from 'react';
 import CardSelectionLite from './components/CardSelectionLite'
 import Help from './components/Help'
-import SpeechReco from './speechReco/SpeechReco'
 function App() {
 
     return (

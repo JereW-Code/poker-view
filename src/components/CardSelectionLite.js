@@ -3,7 +3,7 @@ import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
 import ResultTable from'./ResultTable';
 import MicIcon from '@mui/icons-material/Mic';
-import { Container, IconButton, Button, TextField, FormControl, InputAdornment, Box } from '@mui/material';
+import { Container, IconButton, Button, TextField, FormControl, Box } from '@mui/material';
 
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
 const speechsdk = require('microsoft-cognitiveservices-speech-sdk')
@@ -87,6 +87,7 @@ export default function CardSelectionLite() {
                         break
                     case '过':
                         code.push(' /')
+                        break
                     default:
                         console.log(c)
                         break
