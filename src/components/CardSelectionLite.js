@@ -1,11 +1,12 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import FormControl from '@mui/material/FormControl';
 import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
-import Container from '@mui/material/Container';
 import ResultTable from'./ResultTable';
+import MicIcon from '@mui/icons-material/Mic';
+import { Container, IconButton, Button, TextField, FormControl, InputAdornment, Box } from '@mui/material';
+
+import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
+const speechsdk = require('microsoft-cognitiveservices-speech-sdk')
 
 
 export default function CardSelectionLite() {
@@ -17,10 +18,90 @@ export default function CardSelectionLite() {
     const [playerNum, setPlayerNum] = React.useState('-')
     const [hand, setHand] = React.useState(['/', '/'])
     const [cardsRevealed, setCardsRevealed] = React.useState([])
+    const [voiceInput, setVoiceInput] = React.useState('')
 
     const TYPE = ['S', 'D', 'H', 'C']
     const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
     const CARD_RANK = [0, 14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+
+    const getVoiceInput = async () => {
+        const speechConfig = speechsdk.SpeechConfig.fromSubscription("4d520a20eb2b49299c01bfcd4b887e27", "eastus");
+        speechConfig.speechRecognitionLanguage = 'zh-CN';
+
+        const audioConfig = speechsdk.AudioConfig.fromDefaultMicrophoneInput();
+        const recognizer = new speechsdk.SpeechRecognizer(speechConfig, audioConfig);
+
+        console.log('speak into your microphone...')
+
+        return await recognizer.recognizeOnceAsync(result => {
+            let text;
+            if (result.reason === ResultReason.RecognizedSpeech) {
+                text = `${result.text}`
+            } else {
+                text = 'ERROR: Speech was cancelled or could not be recognized. Ensure your microphone is working properly.';
+            }
+            let precode = []
+            for(let i = 0; i < text.length; i++){
+                let c = text[i]
+                if(c !== ' ' && c !== '。' && c !== '，'){
+                    precode.push(c.toUpperCase())
+                }
+            }
+            let code = []
+            console.log(precode)
+            for(let i = 0; i < precode.length; i++){
+                let c = precode[i]
+                switch (c){
+                    case '梅':
+                        code.push(' C')
+                        break
+                    case '方':
+                        code.push(' D')
+                        break
+                    case '红':
+                        code.push(' H')
+                        break
+                    case '黑':
+                        code.push(' S')
+                        break
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                    case 'J':
+                    case 'Q':
+                    case 'K':
+                    case 'A':
+                        code.push(c)
+                        break
+                    case '石':
+                    case '时':
+                    case '使':
+                    case '矢':
+                    case '1':
+                        code.push('T')
+                        break
+                    case '过':
+                        code.push(' /')
+                    default:
+                        console.log(c)
+                        break
+                }
+            }
+            code = code.reduce((a, b) => a + b)
+            console.log(code)
+
+            document.getElementById('code').value = code
+
+            setVoiceInput(precode)
+            setCode(code)
+            handleSubmit()
+        });
+    }
 
     const getMostOccurance = (cards) => {
         let typeOccurence = [0, 0, 0, 0]
@@ -99,12 +180,27 @@ export default function CardSelectionLite() {
 
     return (
         <Container style={{width: '300px'}} >
+            <p style={{margin: '5px', fontSize:'16px'}}>Win rate of all hands</p>
             <WinTableReduced table={winTable} flush={flush} style={{margin: 'auto'}}/>
             <ResultTable code={code} playerNum={playerNum} hand={hand} winRate={winRate} cardsRevealed={cardsRevealed}
                />
             <FormControl  style={{marginTop: '20px'}}>
-                <TextField label='Code' id='code' key='code' onChange={setCode}/>
-
+                <Box sx={{ display: 'flex'}}>
+                    <TextField
+                               helperText = 'Code'
+                               id='code'
+                               key='code'
+                               onChange={setCode}
+                    />
+                    <IconButton
+                        aria-label="voice-input"
+                        onClick={getVoiceInput}
+                        edge="end"
+                    >
+                        <MicIcon/>
+                    </IconButton>
+                </Box>
+                <p>{voiceInput}</p>
                 <Button variant="contained" type='submit' onClick={handleSubmit}>Submit</Button>
             </FormControl>
         </Container>

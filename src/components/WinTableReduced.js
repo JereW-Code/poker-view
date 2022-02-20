@@ -38,36 +38,36 @@ const WinTableReduced = (props) => {
                 })
         )
     return (
-        <div>
-            <p style={{margin: '5px', fontSize:'16px'}}>Win rate of all hands</p>
-            <HeatMapGrid
-                data={data}
-                xLabels={xLabels}
-                yLabels={yLabels}
-                // Reder cell with tooltip
-                cellRender={(x, y, value) => (
-                    <div title={`Pos(${x}, ${y}) = ${value}`}>{value}</div>
-                )}
-                xLabelsStyle={(index) => ({
-                    color: '#777',
-                    fontSize: '.5rem'
-                })}
-                yLabelsStyle={() => ({
-                    fontSize: '.7rem',
-                    color: '#777'
-                })}
-                cellStyle={(_x, _y, ratio) => ({
-                    background: `rgb(10, 100, 255, ${ratio})`,
-                    fontSize: '.4rem',
-                    color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`
-                })}
-                cellHeight='1rem'
-                xLabelsPos='bottom'
-                onClick={(x, y) => alert(`${NUM[Math.min(x, y)]}, ${NUM[Math.max(x, y)]}`)}
-                yLabelsPos='right'
-                square
-            />
-        </div>
+
+
+        <HeatMapGrid
+            data={data}
+            xLabels={xLabels}
+            yLabels={yLabels}
+            // Reder cell with tooltip
+            cellRender={(x, y, value) => (
+                <div title={`Pos(${x}, ${y}) = ${value}`}>{value}</div>
+            )}
+            xLabelsStyle={(index) => ({
+                color: '#777',
+                fontSize: '.5rem'
+            })}
+            yLabelsStyle={() => ({
+                fontSize: '.7rem',
+                color: '#777'
+            })}
+            cellStyle={(_x, _y, ratio) => ({
+                background: `rgb(10, 100, 255, ${ratio})`,
+                fontSize: '.4rem',
+                color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`
+            })}
+            cellHeight='1rem'
+            xLabelsPos='bottom'
+            onClick={(x, y) => alert(`${NUM[Math.min(x, y)]}, ${NUM[Math.max(x, y)]}`)}
+            yLabelsPos='right'
+            square
+        />
+
 
     )
 }
