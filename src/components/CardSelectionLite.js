@@ -2,7 +2,7 @@ import * as React from 'react';
 import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
 import ResultTable from'./ResultTable';
-import { Container, Button, TextField, FormControl } from '@mui/material';
+import { Container, Button, TextField, FormControl, Switch, FormControlLabel } from '@mui/material';
 
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
 const speechsdk = require('microsoft-cognitiveservices-speech-sdk');
@@ -15,18 +15,25 @@ export default function CardSelectionLite(props) {
     const [code, setCode] = React.useState('')
     const [winRate, setWinRate] = React.useState('-')
     const [winTable, setWinTable] = React.useState({})
+    const [prevWinTable, setPrevWinTable] = React.useState({})
     const [flush, setFlush] = React.useState('ANY')
+    const [prevFlush, setPrevFlush] = React.useState('ANY')
     const [playerNum, setPlayerNum] = React.useState('-')
     const [hand, setHand] = React.useState(['/', '/'])
     const [cardsRevealed, setCardsRevealed] = React.useState([])
     const [voiceInput, setVoiceInput] = React.useState('')
     const [codeInput, setCodeInput] = React.useState('')
+    const [compareWinTable, setCompareWinTable] = React.useState(false)
 
     const TYPE = ['S', 'D', 'H', 'C']
     const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
     const CARD_RANK = [0, 14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
     let language = props.language
+
+    const handleSwitchChange = (event) => {
+        setCompareWinTable(event.target.checked);
+    };
 
     const getVoiceInput = async () => {
         const speechConfig = speechsdk.SpeechConfig.fromSubscription("4d520a20eb2b49299c01bfcd4b887e27", "eastus");
@@ -176,22 +183,26 @@ export default function CardSelectionLite(props) {
         let yourCardIndex = yourCard.map(c => 13 * TYPE.indexOf(c[0]) + CARD_RANK[NUM.indexOf(c[1])] - 2)
         let cards = code
 
-        let winTable = getWinRate(playerNum, cards)
+        let prevFls = flush
+        let prevWTable = winTable
+        let wTable = getWinRate(playerNum, cards)
 
         let wRate
         try {
-            winTable.reduced().print()
-            wRate = winTable.table[yourCardIndex[0]][yourCardIndex[1]]
+            wTable.reduced().print()
+            wRate = wTable.table[yourCardIndex[0]][yourCardIndex[1]]
         } catch (e) {
             wRate = [0, 1]
         }
         // put all 'set' functions at the end of a 'handle' function
         setPlayerNum(playerNum)
         setHand(yourCard)
+        setPrevFlush(prevFls)
         setFlush(getMostOccurance(cards))
         setCardsRevealed(cards)
         setWinRate((100 * wRate[0] / (wRate[0] + wRate[1])).toFixed())
-        setWinTable(winTable)
+        setPrevWinTable(prevWTable)
+        setWinTable(wTable)
 
         console.log(cardsRevealed + '  ' + winRate)
 
@@ -200,7 +211,23 @@ export default function CardSelectionLite(props) {
     return (
         <Container style={{width: '300px'}} >
             <p style={{margin: '5px', fontSize:'16px'}}>{lang["board-title"][language]}</p>
-            <WinTableReduced table={winTable} flush={flush} style={{margin: 'auto'}}/>
+            <WinTableReduced
+                table={winTable}
+                flush={flush}
+                pTable={prevWinTable}
+                pFlush={prevFlush}
+                compare={compareWinTable}
+                style={{margin: 'auto'}}/>
+            <FormControlLabel
+                control={
+                    <Switch
+                        checked={compareWinTable}
+                        onChange={handleSwitchChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
+                }
+                label={lang["check-difference"][language]}
+            />
             <ResultTable
                 code={code}
                 playerNum={playerNum}

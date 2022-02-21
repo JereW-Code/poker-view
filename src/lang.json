@@ -9,5 +9,6 @@
   "code": ["Code", "代码"],
   "submit": ["submit", "提交"],
   "help": ["help", "帮助"],
-  "lang-change": ["中文", "English"]
+  "lang-change": ["中文", "English"],
+  "check-difference": ["compare", "对比"]
 }
