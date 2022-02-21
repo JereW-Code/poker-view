@@ -59,19 +59,26 @@ export default function CardSelectionLite(props) {
                 let code = []
                 console.log(precode)
                 //模糊处理
+                let usedPass = false
                 for(let i = 0; i < precode.length; i++){
                     let c = precode[i]
                     switch (c){
+                        case '没':
                         case '梅':
+                            precode[i] = ',[梅花'
                             code.push(' C')
                             break
                         case '方':
+                            precode[i] = ',[方片'
                             code.push(' D')
                             break
+                        case '洪':
                         case '红':
+                            precode[i] = ',[红桃'
                             code.push(' H')
                             break
                         case '黑':
+                            precode[i] = ',[黑桃'
                             code.push(' S')
                             break
                         case '2':
@@ -86,10 +93,21 @@ export default function CardSelectionLite(props) {
                         case 'Q':
                         case 'K':
                         case 'A':
+                            precode[i] = `${c}]`
                             code.push(c)
                             break
+                        case '我':
+                        case '雾':
+                            precode[i] = '5]'
+                            code.push('5')
+                            break
                         case '斑':
+                            precode[i] = '8]'
                             code.push('8')
+                            break
+                        case '酒':
+                            precode[i] = '9]'
+                            code.push('9')
                             break
 
                         case '石':
@@ -97,26 +115,74 @@ export default function CardSelectionLite(props) {
                         case '使':
                         case '矢':
                         case '1':
+                            precode[i] = '10]'
                             code.push('T')
                             break
                         case '借':
                         case '结':
+                        case '沟':
+                        case '钩':
+                        case '勾':
+                        case '句':
+                        case '接':
+                            precode[i] = 'J]'
                             code.push('J')
                             break
-                        case '过':
-                            code.push(' /')
+                        case '圈':
+                            precode[i] = 'Q]'
+                            code.push('Q')
                             break
+                        case '尖':
+                        case '间':
+                            precode[i] = 'A]'
+                            code.push('A')
+                            break
+                        case '过':
+                            if(!usedPass) {
+                                precode[i] = ',[过],[过]'
+                                code.push(' /')
+                                code.push(' /')
+                                usedPass = true
+                                break
+                            }
                         default:
+                            precode[i] = ''
                             console.log(c)
                             break
                     }
                 }
+                // process precode for voice input display
+                precode.unshift('[人数')
+                precode = precode.reduce((a, b) => a + b).split(',')
+                console.log(precode)
+                let voiceInputDisplay = []
+                for(let i = 0; i < precode.length; i++){
+                    let pc = precode[i]
+                    switch(i) {
+                        case 0:
+                            voiceInputDisplay.push(pc)
+                            break
+                        case 1:
+                            voiceInputDisplay.push(` 手牌: ${pc}`)
+                            break
+                        case 3:
+                            voiceInputDisplay.push(` 场牌: ${pc}`)
+                            break
+                        default:
+                            voiceInputDisplay.push(` , ${pc}`)
+                            break
+                    }
+                }
+                voiceInputDisplay = voiceInputDisplay.reduce((a, b) => a + b)
+                console.log(voiceInputDisplay)
+
+                // process code for win rate calculation
                 code = code.reduce((a, b) => a + b)
                 console.log(code)
 
                 document.getElementById('code').value = code
 
-                setVoiceInput(precode.reduce((a, b) => a + b))
+                setVoiceInput(voiceInputDisplay)
                 setCodeInput(code)
                 setCode(code)
                 handleSubmit()
@@ -244,7 +310,7 @@ export default function CardSelectionLite(props) {
                     multiline
                     maxRows={4}
                     value={voiceInput}
-                    placeholder={'eg：我们总共3个人，我的牌黑桃7黑桃8，场上的牌红桃6方片4黑桃K'}
+                    placeholder={'eg：3个人，手牌黑桃7黑桃8，场上的牌红桃6方片4黑桃K'}
 
                 />
                 <Button
