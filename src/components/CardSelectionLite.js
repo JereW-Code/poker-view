@@ -62,7 +62,7 @@ export default function CardSelectionLite(props) {
                 }
                 let code = []
                 console.log(precode)
-                //模糊处理
+                //模糊处理 voice input
                 let usedPass = false
                 for(let i = 0; i < precode.length; i++){
                     let c = precode[i]
@@ -71,6 +71,8 @@ export default function CardSelectionLite(props) {
                         case '梅':
                         case '眉':
                         case '枚':
+                        case '媒':
+                        case '美':
                             precode[i] = ',[梅花'
                             code.push(' C')
                             break
@@ -78,11 +80,15 @@ export default function CardSelectionLite(props) {
                         case '放':
                         case '坊':
                         case '芳':
+                        case '房':
                             precode[i] = ',[方片'
                             code.push(' D')
                             break
                         case '洪':
+                        case '鸿':
                         case '红':
+                        case '宏':
+                        case '弘':
                             precode[i] = ',[红桃'
                             code.push(' H')
                             break
@@ -105,7 +111,11 @@ export default function CardSelectionLite(props) {
                             precode[i] = `${c}]`
                             code.push(c)
                             break
-
+                        case '阿':
+                        case '两':
+                            precode[i] = '2]'
+                            code.push('2')
+                            break
                         case '山':
                             precode[i] = '3]'
                             code.push('3')
@@ -113,6 +123,8 @@ export default function CardSelectionLite(props) {
                         case '是':
                         case '事':
                         case '式':
+                        case '色':
+                        case '市':
                             precode[i] = '4]'
                             code.push('4')
                             break
@@ -125,6 +137,7 @@ export default function CardSelectionLite(props) {
                         case '留':
                         case 'L':
                         case '利':
+                        case '有':
                             precode[i] = '6]'
                             code.push('6')
                             break
@@ -148,6 +161,7 @@ export default function CardSelectionLite(props) {
                         case '使':
                         case '矢':
                         case '史':
+                        case '池':
                         case '1':
                             precode[i] = '10]'
                             code.push('T')
@@ -159,6 +173,7 @@ export default function CardSelectionLite(props) {
                         case '勾':
                         case '句':
                         case '接':
+                        case '街':
                             precode[i] = 'J]'
                             code.push('J')
                             break
@@ -166,8 +181,15 @@ export default function CardSelectionLite(props) {
                             precode[i] = 'Q]'
                             code.push('Q')
                             break
+                        case '开':
+                            precode[i] = 'K]'
+                            code.push('K')
+                            break
                         case '尖':
                         case '间':
+                        case '煎':
+                        case '渐':
+                        case '笺':
                         case '诶':
                             precode[i] = 'A]'
                             code.push('A')
@@ -213,23 +235,44 @@ export default function CardSelectionLite(props) {
                 }
                 voiceInputDisplay = voiceInputDisplay.reduce((a, b) => a + b)
                 console.log(voiceInputDisplay)
+                //check if input valid
+                let inputIsValid = true
+                let count = 0
+                for(let i = 0; i < voiceInputDisplay.length; i++){
+                    let c = voiceInputDisplay[i]
+                    if(c === '['){
+                        count += 1
+                    } else if(c === ']'){
+                        count -= 1
+                    }
+                    if(count > 1 || count < 0){
+                        inputIsValid = false
+                        break
+                    }
+                }
+                inputIsValid = inputIsValid ? count === 0 : false
+                if(inputIsValid) {
+                    // process code for win rate calculation
+                    code = code.reduce((a, b) => a + b)
+                    console.log(code)
+                    document.getElementById('code').value = code
 
-                // process code for win rate calculation
-                code = code.reduce((a, b) => a + b)
-                console.log(code)
-
-                document.getElementById('code').value = code
-
-                setVoiceInput(voiceInputDisplay)
-                setCodeInput(code)
-                setCode(code)
-                handleSubmit()
+                    setVoiceInput(voiceInputDisplay)
+                    setCodeInput(code)
+                    setCode(code)
+                    setListening(false)
+                    handleSubmit()
+                } else {
+                    text = lang["invalid-voice-input"][language];
+                    setVoiceInput(`${text}: ${voiceInputDisplay}`)
+                    setListening(false)
+                }
             } else {
                 text = lang["invalid-voice-input"][language];
                 setVoiceInput(text)
-                handleSubmit()
+                setListening(false)
             }
-            setListening(false)
+
 
         });
     }
