@@ -143,8 +143,11 @@ export default function CardSelectionLite(props) {
                                 code.push(' /')
                                 code.push(' /')
                                 usedPass = true
-                                break
+                            } else {
+                                precode[i] = ''
+                                console.log(c)
                             }
+                            break
                         default:
                             precode[i] = ''
                             console.log(c)
