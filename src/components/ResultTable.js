@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+const lang = require('../lang.json');
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -39,16 +40,19 @@ let rows = [
 ];
 
 export default function ResultTable(props) {
+
+    let language = props.language
+
     rows = [createData(props.code, props.playerNum, props.hand, props.winRate, props.cardsRevealed)]
     return (
         <TableContainer component={Paper}>
             <Table aria-label="a dense table">
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell align="center">Pl. Num</StyledTableCell>
-                        <StyledTableCell align="center">Hand</StyledTableCell>
-                        <StyledTableCell align="center">Win rate</StyledTableCell>
-                        <StyledTableCell align="center">Cards revealed</StyledTableCell>
+                        <StyledTableCell align="center">{lang["player-num"][language]}</StyledTableCell>
+                        <StyledTableCell align="center">{lang["hand"][language]}</StyledTableCell>
+                        <StyledTableCell align="center">{lang["win-rate"][language]}</StyledTableCell>
+                        <StyledTableCell align="center">{lang["cards-revealed"][language]}</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

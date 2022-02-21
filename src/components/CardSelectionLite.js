@@ -5,10 +5,12 @@ import ResultTable from'./ResultTable';
 import { Container, Button, TextField, FormControl } from '@mui/material';
 
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
-const speechsdk = require('microsoft-cognitiveservices-speech-sdk')
+const speechsdk = require('microsoft-cognitiveservices-speech-sdk');
+
+const lang = require('../lang.json');
 
 
-export default function CardSelectionLite() {
+export default function CardSelectionLite(props) {
 
     const [code, setCode] = React.useState('')
     const [winRate, setWinRate] = React.useState('-')
@@ -23,6 +25,8 @@ export default function CardSelectionLite() {
     const TYPE = ['S', 'D', 'H', 'C']
     const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
     const CARD_RANK = [0, 14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+
+    let language = props.language
 
     const getVoiceInput = async () => {
         const speechConfig = speechsdk.SpeechConfig.fromSubscription("4d520a20eb2b49299c01bfcd4b887e27", "eastus");
@@ -195,19 +199,25 @@ export default function CardSelectionLite() {
 
     return (
         <Container style={{width: '300px'}} >
-            <p style={{margin: '5px', fontSize:'16px'}}>Win rate of all hands</p>
+            <p style={{margin: '5px', fontSize:'16px'}}>{lang["board-title"][language]}</p>
             <WinTableReduced table={winTable} flush={flush} style={{margin: 'auto'}}/>
-            <ResultTable code={code} playerNum={playerNum} hand={hand} winRate={winRate} cardsRevealed={cardsRevealed}
+            <ResultTable
+                code={code}
+                playerNum={playerNum}
+                hand={hand}
+                winRate={winRate}
+                cardsRevealed={cardsRevealed}
+                language={language}
                />
             <FormControl  style={{marginTop: '20px'}}>
 
                 <TextField
                     id="outlined-multiline-flexible"
                     disabled
-                    label="voice input"
                     multiline
                     maxRows={4}
                     value={voiceInput}
+                    placeholder={'eg：我们总共3个人，我的牌黑桃7黑桃8，场上的牌红桃6方片4黑桃K'}
 
                 />
                 <Button
@@ -215,9 +225,9 @@ export default function CardSelectionLite() {
                     aria-label="voice-input"
                     onClick={getVoiceInput}
                     style={{margin: '7px'}}
-                >Voice Input</Button>
+                >{lang["voice-input"][language]}</Button>
                 <TextField
-                    placeholder='code'
+                    placeholder={lang["code"][language]}
                     id='code'
                     key='code'
                     value={codeInput.value}
@@ -231,7 +241,7 @@ export default function CardSelectionLite() {
                     type='submit'
                     onClick={handleSubmit}
                     style={{margin: '7px'}}
-                >Submit</Button>
+                >{lang["submit"][language]}</Button>
             </FormControl>
         </Container>
     );

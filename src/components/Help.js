@@ -1,8 +1,12 @@
 import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Button from '@mui/material/Button';
+const lang = require('../lang.json');
 
-export default function Help() {
+export default function Help(props) {
+
+    let language = props.language
+
     const [open, setOpen] = React.useState(false);
     const handleClose = () => {
         setOpen(false);
@@ -13,7 +17,7 @@ export default function Help() {
 
     return (
         <div>
-            <Button onClick={handleToggle}>Help</Button>
+            <Button onClick={handleToggle}>{lang["help"][language]}</Button>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={open}
