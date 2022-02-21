@@ -10,6 +10,7 @@ const speechsdk = require('microsoft-cognitiveservices-speech-sdk');
 const lang = require('../lang.json');
 
 
+
 export default function CardSelectionLite(props) {
 
     const [code, setCode] = React.useState('')
