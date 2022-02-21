@@ -3,7 +3,6 @@ import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
 import ResultTable from'./ResultTable';
 import { Container, Button, TextField, FormControl, Switch, FormControlLabel } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
 
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
 const speechsdk = require('microsoft-cognitiveservices-speech-sdk');
