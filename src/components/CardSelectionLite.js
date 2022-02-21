@@ -96,12 +96,28 @@ export default function CardSelectionLite(props) {
                             precode[i] = `${c}]`
                             code.push(c)
                             break
+
+                        case '山':
+                            precode[i] = '3]'
+                            code.push('3')
+                            break
+                        case '是':
+                            precode[i] = '4]'
+                            code.push('4')
+                            break
                         case '我':
                         case '雾':
                             precode[i] = '5]'
                             code.push('5')
                             break
+                        case '留':
+                        case 'L':
+                        case '利':
+                            precode[i] = '6]'
+                            code.push('6')
+                            break
                         case '斑':
+                        case '吧':
                             precode[i] = '8]'
                             code.push('8')
                             break
@@ -313,7 +329,7 @@ export default function CardSelectionLite(props) {
                     multiline
                     maxRows={4}
                     value={voiceInput}
-                    placeholder={'eg：3个人，手牌黑桃7黑桃8，场上的牌红桃6方片4黑桃K'}
+                    placeholder={lang["voice-input-hint"][language]}
 
                 />
                 <Button
