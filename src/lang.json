@@ -2,14 +2,17 @@
   "title": ["Dri's Poker Win Rate Calculator", "Dri的德州胜率计算器"],
   "board-title": ["Win rate of all hands", "所有不同手牌的胜率"],
   "player-num": ["Pl. Num", "人数"],
-  "hand": ["hand", "手牌"],
+  "hand": ["Hand", "手牌"],
   "win-rate": ["Win rate", "胜率"],
   "cards-revealed": ["Revealed", "场牌"],
   "voice-input-hint": ["Sorry, this does not support English input yet", "eg：3个人，手牌黑桃7黑桃8，场牌红桃J方片4黑桃K"],
   "voice-input": ["voice input", "语音输入"],
+  "voice-input-listening": ["Speaking...", "讲话中..."],
+  "invalid-voice-input": ["INVALID_VOICE_INPUT", "无效输入"],
   "code": ["Code", "代码"],
   "submit": ["submit", "提交"],
   "help": ["help", "帮助"],
+  "help-page": [],
   "lang-change": ["中文", "English"],
   "check-difference": ["compare", "对比"]
 }

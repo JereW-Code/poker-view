@@ -3,6 +3,7 @@ import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
 import ResultTable from'./ResultTable';
 import { Container, Button, TextField, FormControl, Switch, FormControlLabel } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
 const speechsdk = require('microsoft-cognitiveservices-speech-sdk');
@@ -24,6 +25,7 @@ export default function CardSelectionLite(props) {
     const [voiceInput, setVoiceInput] = React.useState('')
     const [codeInput, setCodeInput] = React.useState('')
     const [compareWinTable, setCompareWinTable] = React.useState(false)
+    const [listening, setListening] = React.useState(false)
 
     const TYPE = ['S', 'D', 'H', 'C']
     const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
@@ -43,6 +45,8 @@ export default function CardSelectionLite(props) {
         const recognizer = new speechsdk.SpeechRecognizer(speechConfig, audioConfig);
 
         console.log('speak into your microphone...')
+
+        setListening(true)
 
         return await recognizer.recognizeOnceAsync(result => {
             let text;
@@ -65,10 +69,15 @@ export default function CardSelectionLite(props) {
                     switch (c){
                         case '没':
                         case '梅':
+                        case '眉':
+                        case '枚':
                             precode[i] = ',[梅花'
                             code.push(' C')
                             break
                         case '方':
+                        case '放':
+                        case '坊':
+                        case '芳':
                             precode[i] = ',[方片'
                             code.push(' D')
                             break
@@ -102,11 +111,14 @@ export default function CardSelectionLite(props) {
                             code.push('3')
                             break
                         case '是':
+                        case '事':
+                        case '式':
                             precode[i] = '4]'
                             code.push('4')
                             break
                         case '我':
                         case '雾':
+                        case '武':
                             precode[i] = '5]'
                             code.push('5')
                             break
@@ -116,8 +128,13 @@ export default function CardSelectionLite(props) {
                             precode[i] = '6]'
                             code.push('6')
                             break
+                        case '漆':
+                            precode[i] = '7]'
+                            code.push('7')
+                            break
                         case '斑':
                         case '吧':
+                        case '包':
                             precode[i] = '8]'
                             code.push('8')
                             break
@@ -130,6 +147,7 @@ export default function CardSelectionLite(props) {
                         case '时':
                         case '使':
                         case '矢':
+                        case '史':
                         case '1':
                             precode[i] = '10]'
                             code.push('T')
@@ -150,6 +168,7 @@ export default function CardSelectionLite(props) {
                             break
                         case '尖':
                         case '间':
+                        case '诶':
                             precode[i] = 'A]'
                             code.push('A')
                             break
@@ -206,10 +225,11 @@ export default function CardSelectionLite(props) {
                 setCode(code)
                 handleSubmit()
             } else {
-                text = 'INVAILD_VOICE_INPUT';
+                text = lang["invalid-voice-input"][language];
                 setVoiceInput(text)
                 handleSubmit()
             }
+            setListening(false)
 
         });
     }
@@ -332,12 +352,24 @@ export default function CardSelectionLite(props) {
                     placeholder={lang["voice-input-hint"][language]}
 
                 />
-                <Button
-                    variant="outlined"
-                    aria-label="voice-input"
-                    onClick={getVoiceInput}
-                    style={{margin: '7px'}}
-                >{lang["voice-input"][language]}</Button>
+                {
+                    listening ? (
+                        <Button
+                            disabled
+                            variant="contained"
+                            aria-label="voice-input-listening"
+                            style={{margin: '7px'}}
+                        >{lang["voice-input-listening"][language]}</Button>
+                    ) : (
+                        <Button
+                            variant="outlined"
+                            aria-label="voice-input"
+                            onClick={getVoiceInput}
+                            style={{margin: '7px'}}
+                        >{lang["voice-input"][language]}</Button>
+                    )
+                }
+
                 <TextField
                     placeholder={lang["code"][language]}
                     id='code'
