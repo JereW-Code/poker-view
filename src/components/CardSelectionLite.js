@@ -63,6 +63,7 @@ export default function CardSelectionLite(props) {
                 let code = []
                 console.log(precode)
                 //模糊处理 voice input
+                if(precode[0] === '有') precode[0] = '';
                 let usedPass = false
                 for(let i = 0; i < precode.length; i++){
                     let c = precode[i]
@@ -80,6 +81,7 @@ export default function CardSelectionLite(props) {
                         case '放':
                         case '坊':
                         case '芳':
+                        case '翻':
                         case '房':
                             precode[i] = ',[方片'
                             code.push(' D')
@@ -125,6 +127,7 @@ export default function CardSelectionLite(props) {
                         case '式':
                         case '色':
                         case '市':
+                        case '泗':
                             precode[i] = '4]'
                             code.push('4')
                             break
@@ -212,6 +215,7 @@ export default function CardSelectionLite(props) {
                     }
                 }
                 // process precode for voice input display
+
                 precode.unshift('[人数')
                 precode = precode.reduce((a, b) => a + b).split(',')
                 console.log(precode)
@@ -414,6 +418,7 @@ export default function CardSelectionLite(props) {
                 }
 
                 <TextField
+                    multiline
                     placeholder={lang["code"][language]}
                     id='code'
                     key='code'
