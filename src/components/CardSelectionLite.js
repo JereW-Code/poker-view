@@ -2,7 +2,7 @@ import * as React from 'react';
 import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
 import ResultTable from'./ResultTable';
-import { Container, Button, TextField, FormControl, FormControlLabel, ButtonGroup, IconButton } from '@mui/material';
+import { Container, Button, TextField, FormControl, ButtonGroup, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
