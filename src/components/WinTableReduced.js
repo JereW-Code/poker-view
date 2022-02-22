@@ -36,7 +36,8 @@ const WinTableReduced = (props) => {
     try{
         winTable = props.table.reduced(props.flush).table
     } catch (e){
-        console.log('failed to refreash win table')
+        // console.log('failed to refreash current win table')
+        winTable = undefined
     }
     data = winTable === undefined ? data : new Array(yLabels.length)
         .fill(0)
@@ -53,7 +54,8 @@ const WinTableReduced = (props) => {
     try{
         prevWinTable = props.pTable.reduced(props.pFlush).table
     } catch (e){
-        console.log('failed to refreash win table')
+        // console.log('failed to refreash pervious win table')
+        prevWinTable = undefined
     }
     dataForCompare = prevWinTable === undefined ? dataForCompare : new Array(yLabels.length)
         .fill(0)
@@ -91,11 +93,11 @@ const WinTableReduced = (props) => {
             cellStyle={(x, y, ratio) => (props.compare ? {
                 background: `rgba(${128 - dataForCompare[x][y] * 12}, ${128 + dataForCompare[x][y] * 12}, 0, ${Math.abs(dataForCompare[x][y]) * 0.01})`,
                 fontSize: '.4rem',
-                color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`
+                color: `rgb(0, 0, 0, ${Math.abs(dataForCompare[x][y]) * 0.05 + 0.5})`
             } : {
                 background: `rgba(10, 100, 255, ${Math.abs(data[x][y]) * 0.01})`,
                 fontSize: '.4rem',
-                color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`
+                color: `rgb(0, 0, 0, ${Math.abs(data[x][y]) * 0.05 + 0.5})`
             })}
             cellHeight='1rem'
             xLabelsPos='bottom'

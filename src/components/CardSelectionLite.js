@@ -2,7 +2,11 @@ import * as React from 'react';
 import getWinRate from '../game/getWinRate';
 import WinTableReduced from './WinTableReduced';
 import ResultTable from'./ResultTable';
-import { Container, Button, TextField, FormControl, Switch, FormControlLabel } from '@mui/material';
+import { Container, Button, TextField, FormControl, FormControlLabel, ButtonGroup, IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 import { ResultReason } from 'microsoft-cognitiveservices-speech-sdk';
 const speechsdk = require('microsoft-cognitiveservices-speech-sdk');
@@ -22,10 +26,21 @@ export default function CardSelectionLite(props) {
     const [playerNum, setPlayerNum] = React.useState('-')
     const [hand, setHand] = React.useState(['/', '/'])
     const [cardsRevealed, setCardsRevealed] = React.useState([])
+
     const [voiceInput, setVoiceInput] = React.useState('')
     const [codeInput, setCodeInput] = React.useState('')
-    const [compareWinTable, setCompareWinTable] = React.useState(false)
     const [listening, setListening] = React.useState(false)
+
+    const [isComparing, setIsComparing] = React.useState(false)
+    const [situations, setSituations] = React.useState([{
+        winTable: {},
+        winRate: '-',
+        flush: 'ANY',
+        playerNum: 6,
+        hand: ['/', '/'],
+        cardsRevealed: []
+    }])
+    const [situationIndex, setSituationIndex] = React.useState(0)
 
     const TYPE = ['S', 'D', 'H', 'C']
     const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
@@ -33,9 +48,61 @@ export default function CardSelectionLite(props) {
 
     let language = props.language
 
-    const handleSwitchChange = (event) => {
-        setCompareWinTable(event.target.checked);
-    };
+    const pervSituation = () => {
+        let index = situationIndex > 1 ? situationIndex - 1 : 1
+        console.log(`${situationIndex}->${index}`)
+        let s = situations[index]
+        let ps = situations[index - 1]
+        setSituationIndex(index)
+        setPlayerNum(s.playerNum)
+        setHand(s.hand)
+        setPrevFlush(ps.flush)
+        setFlush(s.flush)
+        setCardsRevealed(s.cardsRevealed)
+        setWinRate(s.winRate)
+        setPrevWinTable(ps.winTable)
+        setWinTable(s.winTable)
+    }
+
+    const nextSituation = () => {
+        let index = situationIndex < situations.length - 1 ? situationIndex + 1 : situations.length - 1
+        console.log(`${situationIndex}->${index}`)
+        let s = situations[index]
+        let ps = situations[index - 1]
+        setSituationIndex(index)
+        setPlayerNum(s.playerNum)
+        setHand(s.hand)
+        setPrevFlush(ps.flush)
+        setFlush(s.flush)
+        setCardsRevealed(s.cardsRevealed)
+        setWinRate(s.winRate)
+        setPrevWinTable(ps.winTable)
+        setWinTable(s.winTable)
+    }
+
+    const resetSituations = () => {
+        console.log('situation reset')
+        setSituationIndex(0)
+        setSituations([{
+            winTable: {},
+            winRate: '-',
+            flush: 'ANY',
+            playerNum: '-',
+            hand: ['/', '/'],
+            cardsRevealed: []
+        }])
+        document.getElementById('code').value = ''
+        setPlayerNum('-')
+        setHand(['/', '/'])
+        setPrevFlush('ANY')
+        setFlush('ANY')
+        setCardsRevealed([])
+        setWinRate('-')
+        setPrevWinTable({})
+        setWinTable({})
+        setVoiceInput('')
+        setCodeInput('')
+    }
 
     const getVoiceInput = async () => {
         const speechConfig = speechsdk.SpeechConfig.fromSubscription("4d520a20eb2b49299c01bfcd4b887e27", "eastus");
@@ -61,7 +128,7 @@ export default function CardSelectionLite(props) {
                     }
                 }
                 let code = []
-                console.log(precode)
+                // console.log(precode)
                 //模糊处理 voice input
                 if(precode[0] === '有') precode[0] = '';
                 let usedPass = false
@@ -95,6 +162,7 @@ export default function CardSelectionLite(props) {
                             code.push(' H')
                             break
                         case '黑':
+                        case '嗨':
                             precode[i] = ',[黑桃'
                             code.push(' S')
                             break
@@ -128,6 +196,7 @@ export default function CardSelectionLite(props) {
                         case '色':
                         case '市':
                         case '泗':
+                        case '肆':
                             precode[i] = '4]'
                             code.push('4')
                             break
@@ -177,6 +246,8 @@ export default function CardSelectionLite(props) {
                         case '句':
                         case '接':
                         case '街':
+                        case '鸡':
+                        case '叽':
                             precode[i] = 'J]'
                             code.push('J')
                             break
@@ -218,7 +289,7 @@ export default function CardSelectionLite(props) {
 
                 precode.unshift('[人数')
                 precode = precode.reduce((a, b) => a + b).split(',')
-                console.log(precode)
+                // console.log(precode)
                 let voiceInputDisplay = []
                 for(let i = 0; i < precode.length; i++){
                     let pc = precode[i]
@@ -238,7 +309,7 @@ export default function CardSelectionLite(props) {
                     }
                 }
                 voiceInputDisplay = voiceInputDisplay.reduce((a, b) => a + b)
-                console.log(voiceInputDisplay)
+                // console.log(voiceInputDisplay)
                 //check if input valid
                 let inputIsValid = true
                 let count = 0
@@ -258,7 +329,7 @@ export default function CardSelectionLite(props) {
                 if(inputIsValid) {
                     // process code for win rate calculation
                     code = code.reduce((a, b) => a + b)
-                    console.log(code)
+                    // console.log(code)
                     document.getElementById('code').value = code
 
                     setVoiceInput(voiceInputDisplay)
@@ -311,10 +382,10 @@ export default function CardSelectionLite(props) {
                 code.push(c)
             }
         }
-        console.log(code)
+        // console.log(code)
         if(code.length !== 0) {
             code = code.reduce((a, b) => a + b).split(' ')
-            console.log(code)
+            // console.log(code)
             if (code.length < 3) {
                 code = [code.length === 0 ? 6 : code[0], '/', '/']
             }
@@ -341,22 +412,38 @@ export default function CardSelectionLite(props) {
 
         let wRate
         try {
-            wTable.reduced().print()
+            // wTable.reduced().print()
             wRate = wTable.table[yourCardIndex[0]][yourCardIndex[1]]
         } catch (e) {
             wRate = [0, 1]
         }
+        wRate = (100 * wRate[0] / (wRate[0] + wRate[1])).toFixed()
+
+        // save this situation
+        let flsh = getMostOccurance(cards)
+        let sttnIndex = situationIndex + 1
+        let sttns = situations
+        sttns.push({
+            winTable: wTable,
+            winRate: wRate,
+            flush: flsh,
+            playerNum: playerNum,
+            hand: yourCard,
+            cardsRevealed: cards
+        })
+        console.log(sttns)
+
         // put all 'set' functions at the end of a 'handle' function
+        setSituationIndex(sttnIndex)
+        setSituations(sttns)
         setPlayerNum(playerNum)
         setHand(yourCard)
         setPrevFlush(prevFls)
-        setFlush(getMostOccurance(cards))
+        setFlush(flsh)
         setCardsRevealed(cards)
-        setWinRate((100 * wRate[0] / (wRate[0] + wRate[1])).toFixed())
+        setWinRate(wRate)
         setPrevWinTable(prevWTable)
         setWinTable(wTable)
-
-        console.log(cardsRevealed + '  ' + winRate)
 
     }
 
@@ -368,18 +455,8 @@ export default function CardSelectionLite(props) {
                 flush={flush}
                 pTable={prevWinTable}
                 pFlush={prevFlush}
-                compare={compareWinTable}
+                compare={isComparing}
                 style={{margin: 'auto'}}/>
-            <FormControlLabel
-                control={
-                    <Switch
-                        checked={compareWinTable}
-                        onChange={handleSwitchChange}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                }
-                label={lang["check-difference"][language]}
-            />
             <ResultTable
                 code={code}
                 playerNum={playerNum}
@@ -388,7 +465,24 @@ export default function CardSelectionLite(props) {
                 cardsRevealed={cardsRevealed}
                 language={language}
                />
-            <FormControl  style={{marginTop: '20px'}}>
+            <ButtonGroup style={{marginTop: '5px'}}>
+                <IconButton onClick={pervSituation} disabled={situationIndex <= 1} >
+                    <ArrowBackIcon/>
+                </IconButton>
+                <IconButton onClick={resetSituations} >
+                    <RestartAltIcon />
+                </IconButton>
+                <IconButton
+                    onClick={() => setIsComparing(!isComparing)}
+                    color={isComparing ? 'info' : 'default'}
+                >
+                    <CompareArrowsIcon />
+                </IconButton>
+                <IconButton onClick={nextSituation} disabled={situationIndex >= situations.length - 1} >
+                    <ArrowForwardIcon/>
+                </IconButton>
+            </ButtonGroup>
+            <FormControl  style={{marginTop: '5px'}}>
 
                 <TextField
                     id="outlined-multiline-flexible"
@@ -399,23 +493,6 @@ export default function CardSelectionLite(props) {
                     placeholder={lang["voice-input-hint"][language]}
 
                 />
-                {
-                    listening ? (
-                        <Button
-                            disabled
-                            variant="contained"
-                            aria-label="voice-input-listening"
-                            style={{margin: '7px'}}
-                        >{lang["voice-input-listening"][language]}</Button>
-                    ) : (
-                        <Button
-                            variant="outlined"
-                            aria-label="voice-input"
-                            onClick={getVoiceInput}
-                            style={{margin: '7px'}}
-                        >{lang["voice-input"][language]}</Button>
-                    )
-                }
 
                 <TextField
                     multiline
@@ -424,16 +501,34 @@ export default function CardSelectionLite(props) {
                     key='code'
                     value={codeInput.value}
                     onChange={setCodeInput}
+                    style={{marginTop:'5px'}}
                 />
+                <ButtonGroup style={{margin: 'auto', marginTop:'5px'}}>
+                    {
+                        listening ? (
+                            <Button
+                                disabled
+                                variant="contained"
+                                aria-label="voice-input-listening"
+                            >{lang["voice-input-listening"][language]}</Button>
+                        ) : (
+                            <Button
+                                variant="outlined"
+                                aria-label="voice-input"
+                                onClick={getVoiceInput}
+                            >{lang["voice-input"][language]}</Button>
+                        )
+                    }
 
 
 
-                <Button
-                    variant="contained"
-                    type='submit'
-                    onClick={handleSubmit}
-                    style={{margin: '7px'}}
-                >{lang["submit"][language]}</Button>
+                    <Button
+                        variant="contained"
+                        type='submit'
+                        onClick={handleSubmit}
+                        // style={{margin: '7px'}}
+                    >{lang["submit"][language]}</Button>
+                </ButtonGroup>
             </FormControl>
         </Container>
     );
