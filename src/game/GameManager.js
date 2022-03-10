@@ -171,4 +171,21 @@ export default class GameManager{
             this.win(this.players.find(player => !player.isOut))
         }
     }
+
+    copy(){
+        let newGM = new GameManager(this.players)
+
+        newGM.players = this.players
+        newGM.numOfRemainingPlayers = this.numOfRemainingPlayers
+        newGM.board = this.board
+        newGM.displayedCards = this.displayedCards
+        newGM.winTable = this.winTable
+        newGM.testTime = this.testTime
+        newGM.leastBet = this.leastBet
+        newGM.deck = this.deck
+        newGM.running = this.running
+        newGM.maxRaiseTime = this.maxRaiseTime
+
+        return newGM
+    }
 }

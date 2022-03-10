@@ -1,5 +1,6 @@
-const NUM = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
-const TYPE = ['S', 'D', 'H', 'C']
+const Constants = require('./Constants.json');
+const TYPE = Constants.TYPE
+const NUM = Constants.NUM
 
 export default class WinTable{
     constructor(isReduced, prebuiltTable = []) {
@@ -59,6 +60,7 @@ export default class WinTable{
 
     getWinRateOfHand(hand){
         // hand = Card.strToCard(hand)
+        console.log('getting winrate')
         let index = this.getHandIndex(hand)
         let result
         if(this.isReduced){
@@ -71,6 +73,17 @@ export default class WinTable{
             result = this.table[index.high][index.low]
         }
         return result[0] / (result[1] + result[0])
+    }
+
+    add(winTable){
+        if(this.isReduced) winTable = winTable.reduced();
+        for(let row = 0; row < this.table.length; row++){
+            for(let col = 0; col < this.table[row].length; col++){
+                let cellA = this.table[row][col]
+                let cellB = winTable.table[row][col]
+                this.table[row][col] = [cellA[0] + cellB[0], cellA[1] + cellB[1]]
+            }
+        }
     }
 
     reduced(type = 'ANY'){

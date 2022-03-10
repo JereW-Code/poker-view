@@ -1,38 +1,43 @@
 import './App.css';
 import React from 'react';
-import CardSelectionLite from './components/CardSelectionLite'
-import Help from './components/Help'
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link
+} from "react-router-dom";
+import WRCalculator from './routes/WRCalculator'
+import AIDisplay from './routes/AIDisplay'
 
-import { Button, Grid } from '@mui/material';
-
-const lang = require('./lang.json')
 
 
 function App() {
+    return(
+        <Router>
+            <div>
+                <nav>
+                    <ul>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/calculator">calculator</Link>
+                        </li>
+                        <li>
+                            <Link to="/aidisplay">ai display</Link>
+                        </li>
+                    </ul>
+                </nav>
+                <Routes>
+                    <Route path='/calculator' element={<WRCalculator/>} />
+                    <Route path='/aidisplay' element={<AIDisplay/>} />
+                </Routes>
+            </div>
+        </Router>
+    )
 
-    const [language, setLanguage] = React.useState(1)
-
-
-
-    return (
-        <div className="App" id='app'>
-            <h3>{lang["title"][language]}</h3>
-            <CardSelectionLite language={language}/>
-            <Grid container spacing={2} style={{maxWidth:'100px', margin:'auto'}}>
-                    <Grid item xs={6}>
-                        <Help language={language}/>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button
-                            variant="text"
-                            onClick={() => {
-                                setLanguage((language + 1) % 2)
-                            }}
-                        >{lang["lang-change"][language]}</Button>
-                    </Grid>
-                </Grid>
-        </div>
-    );
 }
+
+
 
 export default App;

@@ -1,8 +1,9 @@
 import React from 'react'
 import { HeatMapGrid } from 'react-grid-heatmap'
 
-const NUM = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
-const TYPE = ['S', 'D', 'H', 'C']
+const Constants = require('../game/Constants.json');
+const TYPE = Constants.TYPE
+const NUM = Constants.NUM
 
 let xLabels = new Array(52).fill(0).map((_, i) => TYPE[Math.floor(i / 13)] + NUM[i % 13])
 let yLabels = new Array(52).fill(0).map((_, i) => TYPE[Math.floor(i / 13)] + NUM[i % 13])

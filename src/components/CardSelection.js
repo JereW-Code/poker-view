@@ -1,5 +1,7 @@
 import * as React from 'react';
 import getWinRate from '../game/getWinRate';
+import getGM from '../game/getGM';
+// import getFutureGM from '../game/getFutureGM';
 import WinTableReduced from './WinTableReduced';
 import ResultTable from'./ResultTable';
 import { Container, Button, TextField, FormControl, ButtonGroup, IconButton } from '@mui/material';
@@ -13,9 +15,14 @@ const speechsdk = require('microsoft-cognitiveservices-speech-sdk');
 
 const lang = require('../lang.json');
 
+const Constants = require('../game/Constants.json');
+const TYPE = Constants.TYPE
+const NUM = Constants.NUM
+const CARD_RANK = Constants.CARD_RANK
 
 
-export default function CardSelectionLite(props) {
+
+export default function CardSelection(props) {
 
     const [code, setCode] = React.useState('')
     const [winRate, setWinRate] = React.useState('-')
@@ -42,9 +49,8 @@ export default function CardSelectionLite(props) {
     }])
     const [situationIndex, setSituationIndex] = React.useState(0)
 
-    const TYPE = ['S', 'D', 'H', 'C']
-    const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
-    const CARD_RANK = [0, 14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    const [isSubmitting, setIsSubmitting] = React.useState(false)
+
 
     let language = props.language
 
@@ -141,6 +147,10 @@ export default function CardSelectionLite(props) {
                         case '枚':
                         case '媒':
                         case '美':
+                        case '霉':
+                        case '每':
+                        case '煤':
+                        case '莓':
                             precode[i] = ',[梅花'
                             code.push(' C')
                             break
@@ -163,6 +173,8 @@ export default function CardSelectionLite(props) {
                             break
                         case '黑':
                         case '嗨':
+                        case 'H':
+                        case '嘿':
                             precode[i] = ',[黑桃'
                             code.push(' S')
                             break
@@ -183,6 +195,7 @@ export default function CardSelectionLite(props) {
                             break
                         case '阿':
                         case '两':
+                        case '尔':
                             precode[i] = '2]'
                             code.push('2')
                             break
@@ -210,16 +223,19 @@ export default function CardSelectionLite(props) {
                         case 'L':
                         case '利':
                         case '有':
+                        case '柳':
                             precode[i] = '6]'
                             code.push('6')
                             break
                         case '漆':
+                        case '期':
                             precode[i] = '7]'
                             code.push('7')
                             break
                         case '斑':
                         case '吧':
                         case '包':
+                        case '巴':
                             precode[i] = '8]'
                             code.push('8')
                             break
@@ -252,6 +268,8 @@ export default function CardSelectionLite(props) {
                             code.push('J')
                             break
                         case '圈':
+                        case '框':
+                        case '矿':
                             precode[i] = 'Q]'
                             code.push('Q')
                             break
@@ -265,6 +283,7 @@ export default function CardSelectionLite(props) {
                         case '渐':
                         case '笺':
                         case '诶':
+                        case '肩':
                             precode[i] = 'A]'
                             code.push('A')
                             break
@@ -395,6 +414,8 @@ export default function CardSelectionLite(props) {
         }
     }
 
+
+
     const handleSubmit = () => {
 
         let code = getCode(document.getElementById('code').value.toUpperCase())
@@ -408,8 +429,14 @@ export default function CardSelectionLite(props) {
 
         let prevFls = flush
         let prevWTable = winTable
-        let wTable = getWinRate(playerNum, cards)
-
+        // let wTable = getWinRate(playerNum, cards)
+        let gm = getGM(playerNum, cards)
+        /**
+         * use code gm = getFutureGM(gm) to get the future table
+         * remember to import getFutureGM
+         * */
+        // gm = getFutureGM(gm)
+        let wTable = gm.winTable
         let wRate
         try {
             // wTable.reduced().print()
@@ -431,6 +458,11 @@ export default function CardSelectionLite(props) {
             hand: yourCard,
             cardsRevealed: cards
         })
+        const maxIndex = 5
+        if(sttnIndex > maxIndex){
+            sttnIndex = maxIndex
+            sttns.shift()
+        }
         console.log(sttns)
 
         // put all 'set' functions at the end of a 'handle' function
@@ -519,15 +551,14 @@ export default function CardSelectionLite(props) {
                             >{lang["voice-input"][language]}</Button>
                         )
                     }
-
-
-
                     <Button
                         variant="contained"
                         type='submit'
                         onClick={handleSubmit}
                         // style={{margin: '7px'}}
                     >{lang["submit"][language]}</Button>
+
+
                 </ButtonGroup>
             </FormControl>
         </Container>

@@ -1,6 +1,7 @@
-const TYPE = ['S', 'D', 'H', 'C']
-const NUM = ['/', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
-const CARD_RANK = [0, 14, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+const Constants = require('../game/Constants.json');
+const TYPE = Constants.TYPE
+const NUM = Constants.NUM
+const CARD_RANK = Constants.CARD_RANK
 
 export default class Card {
     constructor(num, type) {
